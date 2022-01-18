@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../KoiBots2020"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}
