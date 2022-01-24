@@ -33,9 +33,11 @@ public class Robot extends TimedRobot {
   private VictorSPX hookMotor;
   private VictorSPX intakeMotor;
   private CANSparkMax lifterMotor;
-  //Controler Binding Variables
+  //Function Variables
   private int driveFunctionAxisOne;
   private int driveFunctionAxisTwo;
+  private int intakeFunctionTrigger;
+  private boolean intakeFunctionStatus;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -91,12 +93,20 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     driveFunctionAxisOne = XBoxController.LEFT_STICK_Y_AXIS;
     driveFunctionAxisTwo = XBoxController.LEFT_STICK_X_AXIS;
+    intakeFunctionTrigger = XBoxController.A_BUTTON;
+    intakeFunctionStatus = false;
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
     driveFunction(joystickController.getRawAxis(driveFunctionAxisOne), joystickController.getRawAxis(driveFunctionAxisTwo));
+    if(joystickController.getRawButton(intakeFunctionTrigger)){
+      intakeFunctionStatus = true;
+      turnIntakeOn();
+    } else if(intakeFunctionStatus){
+      turnIntakeOff();
+    }
   }
 
   /** This function is called once when the robot is disabled. */
@@ -118,5 +128,12 @@ public class Robot extends TimedRobot {
   public void driveFunction(double motorPower, double modulator) {
     frontLeftMotor.set(ControlMode.PercentOutput, motorPower - modulator);
     frontRightMotor.set(ControlMode.PercentOutput, motorPower + modulator);
+  }
+
+  public void turnIntakeOn() {
+    intakeMotor.set(ControlMode.PercentOutput, 100);
+  }
+  public void turnIntakeOff() {
+    intakeMotor.set(ControlMode.PercentOutput, 0);
   }
 }
