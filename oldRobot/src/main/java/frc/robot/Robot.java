@@ -89,8 +89,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    driveFunctionAxisOne = 1;
-    driveFunctionAxisTwo = 0;
+    driveFunctionAxisOne = XBoxController.LEFT_STICK_Y_AXIS;
+    driveFunctionAxisTwo = XBoxController.LEFT_STICK_X_AXIS;
   }
 
   /** This function is called periodically during operator control. */
