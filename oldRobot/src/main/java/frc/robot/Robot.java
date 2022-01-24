@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driveFunctionAxisOne = 1;
-    driveFunctionAxisTwo = 1;
+    driveFunctionAxisTwo = 0;
   }
 
   /** This function is called periodically during operator control. */
