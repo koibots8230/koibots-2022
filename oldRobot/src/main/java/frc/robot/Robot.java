@@ -25,17 +25,14 @@ public class Robot extends TimedRobot {
   private final Timer m_timer = new Timer();
 
   //Drivetrain motors
-  private VictorSPX frontLeftMotor;
-  private VictorSPX frontRightMotor;
-  private VictorSPX backLeftMotor;
-  private VictorSPX backRightMotor;
+  private DriveTrain driveTrain;
   //Other motors
   private VictorSPX hookMotor;
   private VictorSPX intakeMotor;
   private CANSparkMax lifterMotor;
   //Function Variables
-  private int driveFunctionAxisOne;
-  private int driveFunctionAxisTwo;
+  private int driveAxisOne;
+  private int driveAxisTwo;
   private int intakeFunctionTrigger;
   private boolean intakeFunctionStatus;
 
@@ -45,15 +42,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    //Drivetrain motors
-    frontLeftMotor = new VictorSPX(12);
-    frontRightMotor = new VictorSPX(10);
-    backLeftMotor = new VictorSPX(11);
-    backLeftMotor.follow(frontLeftMotor);
-    backLeftMotor.setInverted(false);
-    backRightMotor = new VictorSPX(13);
-    backRightMotor.follow(frontRightMotor);
-    backRightMotor.setInverted(false);
+    driveTrain = new DriveTrain(12, 10, 11, 13);
     //Other motors
     hookMotor = new VictorSPX(2);
     hookMotor.setInverted(false);
@@ -91,8 +80,8 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    driveFunctionAxisOne = XBoxController.LEFT_STICK_Y_AXIS;
-    driveFunctionAxisTwo = XBoxController.LEFT_STICK_X_AXIS;
+    driveAxisOne = XBoxController.LEFT_STICK_Y_AXIS;
+    driveAxisTwo = XBoxController.LEFT_STICK_X_AXIS;
     intakeFunctionTrigger = XBoxController.A_BUTTON;
     intakeFunctionStatus = false;
   }
@@ -100,7 +89,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    driveFunction(joystickController.getRawAxis(driveFunctionAxisOne), joystickController.getRawAxis(driveFunctionAxisTwo));
+    driveTrain.driveRobot(joystickController.getRawAxis(driveAxisOne), joystickController.getRawAxis(driveAxisTwo));
     if(joystickController.getRawButton(intakeFunctionTrigger)){
       intakeFunctionStatus = true;
       turnIntakeOn();
@@ -124,11 +113,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  public void driveFunction(double motorPower, double modulator) {
-    frontLeftMotor.set(ControlMode.PercentOutput, motorPower + modulator);
-    frontRightMotor.set(ControlMode.PercentOutput, motorPower - modulator);
-  }
 
   public void turnIntakeOn() {
     intakeMotor.set(ControlMode.PercentOutput, 100);
