@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
   private final Timer m_timer = new Timer();
 
   //Drivetrain motors
-  private DriveTrain driveTrain;
+  private TankDriveTrain tankDriveTrain;
   //Other motors
   private VictorSPX hookMotor;
   private VictorSPX intakeMotor;
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    driveTrain = new DriveTrain(12, 10, 11, 13);
+    tankDriveTrain = new TankDriveTrain(12, 10, 11, 13);
     //Other motors
     hookMotor = new VictorSPX(2);
     hookMotor.setInverted(false);
@@ -81,7 +81,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     driveAxisOne = XBoxController.LEFT_STICK_Y_AXIS;
-    driveAxisTwo = XBoxController.LEFT_STICK_X_AXIS;
+    driveAxisTwo = XBoxController.RIGHT_STICK_X_AXIS;
     intakeFunctionTrigger = XBoxController.A_BUTTON;
     intakeFunctionStatus = false;
   }
@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    driveTrain.driveRobot(joystickController.getRawAxis(driveAxisOne), joystickController.getRawAxis(driveAxisTwo));
+    tankDriveTrain.driveRobot(joystickController.getRawAxis(driveAxisOne), joystickController.getRawAxis(driveAxisTwo));
     if(joystickController.getRawButton(intakeFunctionTrigger)){
       intakeFunctionStatus = true;
       turnIntakeOn();
