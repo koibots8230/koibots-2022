@@ -126,8 +126,8 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   public void driveFunction(double motorPower, double modulator) {
-    frontLeftMotor.set(ControlMode.PercentOutput, motorPower - modulator);
-    frontRightMotor.set(ControlMode.PercentOutput, motorPower + modulator);
+    frontLeftMotor.set(ControlMode.PercentOutput, motorPower + modulator);
+    frontRightMotor.set(ControlMode.PercentOutput, motorPower - modulator);
   }
 
   public void turnIntakeOn() {
