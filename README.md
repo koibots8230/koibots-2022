@@ -6,3 +6,4 @@ Hey guys, this year lets try to stick to a couple different conventions for how 
 - [Variable Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)
 - [Git Commit Conventions](https://www.conventionalcommits.org/en/v1.0.0/)
 - [Game Resources](https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system)
+- [Java Best Practices](https://xperti.io/blogs/java-coding-best-practices/#1_Use_Proper_Naming_Conventions)
