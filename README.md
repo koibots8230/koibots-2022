@@ -8,3 +8,4 @@ Hey guys, this year lets try to stick to a couple different conventions for how 
 - [Game Resources](https://www.firstinspires.org/resource-library/frc/competition-manual-qa-system)
 - [Java Best Practices](https://xperti.io/blogs/java-coding-best-practices/#1_Use_Proper_Naming_Conventions)
 - [WPLIB Extension for VSCode](https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/wpilib-setup.html)
+- [Information on command based robots](https://docs.wpilib.org/en/stable/docs/software/commandbased/what-is-command-based.html)
