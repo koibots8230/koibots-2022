@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Robot extends TimedRobot {
   
-  private final Joystick joystickController = new Joystick(0);
+  private final XBoxController joystickController = new XBoxController() {};
   private final Timer m_timer = new Timer();
 
   //Drivetrain motors
