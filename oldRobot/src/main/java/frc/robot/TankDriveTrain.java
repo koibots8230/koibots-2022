@@ -21,13 +21,13 @@ public class TankDriveTrain {
         backRightMotor.setInverted(false);
     }
 
-    public void driveRobot(double axisOne, double axisTwo){
-        frontLeftMotor.set(ControlMode.PercentOutput, axisOne);
-        frontRightMotor.set(ControlMode.PercentOutput, axisTwo);
+    public void driveRobot(double axisOneValue, double axisTwoValue){
+        frontLeftMotor.set(ControlMode.PercentOutput, axisOneValue);
+        frontRightMotor.set(ControlMode.PercentOutput, axisTwoValue);
     }
 
-    public void driveRobot(double stickOneYAxis, double stickOneXAxis, double stickTwoYAxis, double stickTwoXAxis){
-        frontLeftMotor.set(ControlMode.PercentOutput, stickOneYAxis + stickOneXAxis);
-        frontRightMotor.set(ControlMode.PercentOutput, stickTwoYAxis + stickTwoXAxis);
+    public void driveRobot(double stickOneYAxisValue, double stickOneXAxisValue, double stickTwoYAxisValue, double stickTwoXAxisValue){
+        frontLeftMotor.set(ControlMode.PercentOutput, stickOneYAxisValue + stickOneXAxisValue);
+        frontRightMotor.set(ControlMode.PercentOutput, stickTwoYAxisValue + stickTwoXAxisValue);
     }
 }
