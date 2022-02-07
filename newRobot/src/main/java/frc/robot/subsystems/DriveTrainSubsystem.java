@@ -30,9 +30,4 @@ public class DriveTrainSubsystem extends SubsystemBase {
     frontLeftMotor.set(ControlMode.PercentOutput, xBoxController.getRawAxis(XboxController.Axis.kLeftY.value));
     frontRightMotor.set(ControlMode.PercentOutput, xBoxController.getRawAxis(XboxController.Axis.kRightY.value));
   }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
 }
