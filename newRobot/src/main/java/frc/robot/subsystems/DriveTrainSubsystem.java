@@ -27,7 +27,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
   }
 
   public void updateMotors() {
-    frontLeftMotor.set(ControlMode.PercentOutput, xBoxController.getRawAxis(XboxController.Axis.kLeftY.value));
-    frontRightMotor.set(ControlMode.PercentOutput, xBoxController.getRawAxis(XboxController.Axis.kRightY.value));
+    frontLeftMotor.set(ControlMode.PercentOutput, 100);
+    frontRightMotor.set(ControlMode.PercentOutput, 100);
   }
 }
