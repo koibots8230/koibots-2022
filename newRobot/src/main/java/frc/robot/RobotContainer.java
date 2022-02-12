@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveTrainDefaultCommand;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.driveTrainSubsystem.DriveTrainSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
