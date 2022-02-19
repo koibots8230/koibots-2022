@@ -1,13 +1,13 @@
 package frc.robot.subsystems.driveTrainSubsystem;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LeftTrainSubsystem extends SubsystemBase{
-    private final VictorSPX frontMotor = new VictorSPX(14);
-    private final VictorSPX backMotor = new VictorSPX(15);
+    private final CANSparkMax frontMotor = new CANSparkMax(0, MotorType.kBrushless);
+    private final CANSparkMax backMotor = new CANSparkMax(0, MotorType.kBrushless);
 
     public LeftTrainSubsystem(){    
         backMotor.follow(frontMotor);
@@ -18,6 +18,6 @@ public class LeftTrainSubsystem extends SubsystemBase{
     public void periodic() {}
 
     public void updateMotors(double percentValue){
-        frontMotor.set(ControlMode.PercentOutput, percentValue);
+        frontMotor.set(percentValue);
     }
 }
