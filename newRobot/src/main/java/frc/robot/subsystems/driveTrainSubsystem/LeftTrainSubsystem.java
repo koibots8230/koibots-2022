@@ -18,6 +18,6 @@ public class LeftTrainSubsystem extends SubsystemBase{
     public void periodic() {}
 
     public void updateMotors(double percentValue){
-        frontMotor.set(percentValue);
+        //frontMotor.set(percentValue); //uncomment this to make it work
     }
 }
