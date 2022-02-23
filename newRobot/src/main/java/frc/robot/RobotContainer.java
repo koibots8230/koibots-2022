@@ -6,9 +6,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.DriveTrainDefaultCommand;
-import frc.robot.commands.ShooterDefaultCommand;
+import frc.robot.commands.defaultCommands.DriveTrainDefaultCommand;
+import frc.robot.commands.defaultCommands.ShooterDefaultCommand;
+import frc.robot.commands.defaultCommands.UptakeDefaultCommand;
 import frc.robot.subsystems.cargoSubsystem.ShooterSubsystem;
+import frc.robot.subsystems.cargoSubsystem.UptakeSubsystem;
 import frc.robot.subsystems.driveTrainSubsystem.DriveTrainSubsystem;
 
 /**
@@ -23,11 +25,14 @@ public class RobotContainer {
   private final DriveTrainDefaultCommand driveTrainDefaultCommand = new DriveTrainDefaultCommand(driveTrainSubsystem);
   private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   private final ShooterDefaultCommand shooterDefaultCommand = new ShooterDefaultCommand(shooterSubsystem);
+  private final UptakeSubsystem uptakeSubsystem = new UptakeSubsystem();
+  private final UptakeDefaultCommand uptakeDefaultCommand = new UptakeDefaultCommand(uptakeSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     driveTrainSubsystem.setDefaultCommand(driveTrainDefaultCommand);
     shooterSubsystem.setDefaultCommand(shooterDefaultCommand); // This should not be the default command long term. This is only to test.
+    uptakeSubsystem.setDefaultCommand(uptakeDefaultCommand); // This should not be the default command long term. This is only to test.
     // Configure the button bindings
     configureButtonBindings();
   }
