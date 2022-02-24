@@ -10,14 +10,15 @@ public class RightTrainSubsystem extends SubsystemBase{
     private final CANSparkMax backMotor = new CANSparkMax(4, MotorType.kBrushless);
 
     public RightTrainSubsystem(){
-        backMotor.follow(frontMotor);
         frontMotor.setInverted(true);
+        backMotor.setInverted(true);
     }
 
     @Override
     public void periodic() {}
 
     public void updateMotors(double percentValue){
-        //frontMotor.set(percentValue);
+        frontMotor.set(percentValue);
+        backMotor.set(percentValue);
     }
 }
