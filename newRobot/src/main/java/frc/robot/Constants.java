@@ -26,5 +26,4 @@ public final class Constants {
     public static final MotorType TEST_MOTOR_TYPE = MotorType.kBrushless; // Can be MotorType.kBrushless or MotorType.kBrushed
     public static final double TEST_MOTOR_POWER = 1; // Is a percent value ranging from -1 to 1
     public static final boolean TEST_MOTOR_INVERTED = false; // Can be true or false
-    
 }
