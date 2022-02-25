@@ -9,7 +9,7 @@ public class MotorTestSubsystem extends SubsystemBase{
     private final CANSparkMax testMotor = new CANSparkMax(Constants.TEST_MOTOR_PORT_NUMBER, Constants.TEST_MOTOR_TYPE);
     
     public MotorTestSubsystem(){
-        testMotor.setInverted(false);
+        testMotor.setInverted(Constants.TEST_MOTOR_INVERTED);
     }
 
     @Override
