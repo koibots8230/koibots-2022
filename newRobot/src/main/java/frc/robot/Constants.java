@@ -20,7 +20,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 Edit below here
   ---------------------------------------------------------------------------------*/
 public final class Constants {
-    public static final boolean MOTOR_TEST_ENABLED = true; // Can be true or false. Turn this to false if you'd like to test a motor.
+    public static final boolean MOTOR_TEST_ENABLED = false; // Can be true or false. Turn this to false if you'd like to test a motor.
     
     public static final int TEST_MOTOR_PORT_NUMBER = 1; // Each motor controller is labled with an integer ID if it hasn't been labled it hasn't been setup yet.
     public static final MotorType TEST_MOTOR_TYPE = MotorType.kBrushless; // Can be MotorType.kBrushless or MotorType.kBrushed

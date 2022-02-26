@@ -5,14 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.defaultCommands.DriveTrainDefaultCommand;
-import frc.robot.commands.defaultCommands.MotorTestDefaultCommand;
-import frc.robot.commands.defaultCommands.ShooterDefaultCommand;
-import frc.robot.commands.defaultCommands.UptakeDefaultCommand;
-import frc.robot.subsystems.MotorTestSubsystem;
+import frc.robot.commands.defaultCommands.ShooterOnPressCommand;
+import frc.robot.commands.defaultCommands.ShooterOnReleaseCommand;
 import frc.robot.subsystems.cargoSubsystem.ShooterSubsystem;
-import frc.robot.subsystems.cargoSubsystem.UptakeSubsystem;
 import frc.robot.subsystems.driveTrainSubsystem.DriveTrainSubsystem;
 
 /**
@@ -23,26 +22,22 @@ import frc.robot.subsystems.driveTrainSubsystem.DriveTrainSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
+  //Controller Stuff
+  private final XboxController xboxController = new XboxController(0);
+  //private final JoystickButton aButton = new JoystickButton(xboxController, XboxController.Button.kA.value);
+  //SubSystems
+  private final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  private final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
+  //Button Commands
+  private final ShooterOnPressCommand shooterOnPressCommand = new ShooterOnPressCommand(shooterSubsystem);
+  private final ShooterOnReleaseCommand shooterOnReleaseCommand = new ShooterOnReleaseCommand(shooterSubsystem);
+  //Default Commands
+  private final DriveTrainDefaultCommand driveTrainDefaultCommand = new DriveTrainDefaultCommand(driveTrainSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if(!Constants.MOTOR_TEST_ENABLED){
-      final DriveTrainSubsystem driveTrainSubsystem = new DriveTrainSubsystem();
-      final DriveTrainDefaultCommand driveTrainDefaultCommand = new DriveTrainDefaultCommand(driveTrainSubsystem);
-      final ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
-      final ShooterDefaultCommand shooterDefaultCommand = new ShooterDefaultCommand(shooterSubsystem);
-      final UptakeSubsystem uptakeSubsystem = new UptakeSubsystem();
-      final UptakeDefaultCommand uptakeDefaultCommand = new UptakeDefaultCommand(uptakeSubsystem);
-
-      driveTrainSubsystem.setDefaultCommand(driveTrainDefaultCommand);
-      shooterSubsystem.setDefaultCommand(shooterDefaultCommand); // This should not be the default command long term. This is only to test.
-      uptakeSubsystem.setDefaultCommand(uptakeDefaultCommand); // This should not be the default command long term. This is only to test.
-    }else{
-      final MotorTestSubsystem motorTestSubsystem = new MotorTestSubsystem();
-      final MotorTestDefaultCommand motorTestDefaultCommand = new MotorTestDefaultCommand(motorTestSubsystem);
-      motorTestSubsystem.setDefaultCommand(motorTestDefaultCommand);
-    }
+    //Default Command Binding
+    driveTrainSubsystem.setDefaultCommand(driveTrainDefaultCommand);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -53,7 +48,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    //Trigger Command Binding
+    new JoystickButton(xboxController, XboxController.Button.kA.value)
+      .whenPressed(shooterOnPressCommand)
+      .whenReleased(shooterOnReleaseCommand);
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

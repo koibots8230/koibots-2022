@@ -5,10 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -20,18 +18,6 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
-  private final XboxController xBoxController = new XboxController(0);
-  private final JoystickButton leftBumper = new JoystickButton(xBoxController, XboxController.Button.kLeftBumper.value);
-  private final JoystickButton rightBumper = new JoystickButton(xBoxController, XboxController.Button.kRightBumper.value);
-  private final JoystickButton leftStick = new JoystickButton(xBoxController, XboxController.Button.kLeftStick.value);
-  private final JoystickButton rightStick = new JoystickButton(xBoxController, XboxController.Button.kRightStick.value);
-  private final JoystickButton aButton = new JoystickButton(xBoxController, XboxController.Button.kA.value);
-  private final JoystickButton bButton = new JoystickButton(xBoxController, XboxController.Button.kB.value);
-  private final JoystickButton xButton = new JoystickButton(xBoxController, XboxController.Button.kX.value);
-  private final JoystickButton yButton = new JoystickButton(xBoxController, XboxController.Button.kY.value);
-  private final JoystickButton backButton = new JoystickButton(xBoxController, XboxController.Button.kBack.value);
-  private final JoystickButton startButton = new JoystickButton(xBoxController, XboxController.Button.kStart.value);
 
   /**
    * This function is run when the robot is first started up and should be used for any
