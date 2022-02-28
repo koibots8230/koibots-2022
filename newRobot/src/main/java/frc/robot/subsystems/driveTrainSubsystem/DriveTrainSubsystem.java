@@ -27,7 +27,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     motorFive.set(.8);
     motorSix.set(.5);
     motorSeven.set(.5);
-    //rightTrainSubsystem.updateMotors(.5); // 1 should be replaced with xBoxController.getRawAxis(XboxController.Axis.kRightY.value)
-    //leftTrainSubsystem.updateMotors(.5); // 1 should be replaced with xBoxController.getRawAxis(XboxController.Axis.kLeftY.value)
+    rightTrainSubsystem.updateMotors(xBoxController.getRightY()); // 1 should be replaced with xBoxController.getRawAxis(XboxController.Axis.kRightY.value)
+    leftTrainSubsystem.updateMotors(xBoxController.getLeftY()); // 1 should be replaced with xBoxController.getRawAxis(XboxController.Axis.kLeftY.value)
   }
 }

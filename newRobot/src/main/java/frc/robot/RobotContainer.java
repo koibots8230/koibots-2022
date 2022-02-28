@@ -51,8 +51,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Trigger Command Binding
     new JoystickButton(xboxController, XboxController.Button.kA.value)
-      .whenPressed(shooterOnPressCommand)
-      .whenReleased(shooterOnReleaseCommand);
+      .whenPressed(new ShooterOnPressCommand(shooterSubsystem))
+      .whenReleased(new ShooterOnReleaseCommand(shooterSubsystem));
   }
 
   /**
