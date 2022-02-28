@@ -37,7 +37,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     //Default Command Binding
-    driveTrainSubsystem.setDefaultCommand(driveTrainDefaultCommand);
+    driveTrainSubsystem.setDefaultCommand(new DriveTrainDefaultCommand(driveTrainSubsystem));
     // Configure the button bindings
     configureButtonBindings();
   }
