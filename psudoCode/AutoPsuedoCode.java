@@ -6,7 +6,7 @@ public class AutoPsuedoCode{
   RobotTimer = Timer();
 
   RobotTimer.start() //starts a timer at 0 seconds
-    while(isAutonomous() && isEnabled()) //run when autonomous is Clive and you are enabled
+    while(isAutonomous() && isEnabled()) //run when autonomous is live and you are enabled
     {
         if(RobotTimer.get() < timeToGetToPosition) //time is a double in terms of seconds
         {
@@ -17,7 +17,7 @@ public class AutoPsuedoCode{
     RobotTimer.stop() //stops timer
 
     //SHOOT WHEN AT POSITION
-    while(isAutonomous() && isEnabled()) //run when autonomous is Clive and you are enabled
+    while(isAutonomous() && isEnabled()) //run when autonomous is live and you are enabled
     {
         if(RobotTimer.get() < avgTimeToShoot) //time is a double in terms of seconds
         {
@@ -26,17 +26,18 @@ public class AutoPsuedoCode{
         //Timer.delay(0.005); //does nothing for 5 seconds but helps refresh motors in loop
     }
     //move out of tarmac
+    RobotTimer.stop()
 
-    Timer.start() //starts a timer at 0 seconds
-      while(isAutonomous() && isEnabled()) //run when autonomous is Clive and you are enabled
+    RobotTimer.start() //starts a timer at 0 seconds
+      while(isAutonomous() && isEnabled()) //run when autonomous is Cive and you are enabled
       {
-          if(Timer.get() < timeToGetToOutOfTarmac) //time is a double in terms of seconds
+          if(RobotTimer.get() < timeToGetToOutOfTarmac) //time is a double in terms of seconds
           {
               driveTrain.set(speed); //move robot at this speed with/without curve
           }
           //Timer.delay(0.005); //does nothing for 5 seconds but helps refresh motors in loop
       }
-      Timer.stop() //stops timer
+    RobotTimer.stop() //stops timer
 
 
 }
