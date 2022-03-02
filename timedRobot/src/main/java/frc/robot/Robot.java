@@ -24,8 +24,8 @@ public class Robot extends TimedRobot {
   CANSparkMax backRightMotor;
 
   CANSparkMax shooterMotor;
-  CANSparkMax backUptakeMotor;
-  CANSparkMax frontUptakeMotor;
+  CANSparkMax uptakeMotor;
+  CANSparkMax midtakeMotor;
   CANSparkMax intakeMotor;
 
   RelativeEncoder frontLeftMotorEncoder;
@@ -34,10 +34,12 @@ public class Robot extends TimedRobot {
   RelativeEncoder backRightMotorEncoder;
 
   RelativeEncoder shooterMotorEncoder;
-  RelativeEncoder backUptakeMotorEncorder;
-  RelativeEncoder frontUptakeMotorEncoder;
+  RelativeEncoder uptakeMotorEncorder;
+  RelativeEncoder midtakeMotorEncoder;
 
   XboxController xboxController;
+
+  Long autonomousStartTime;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -53,12 +55,21 @@ public class Robot extends TimedRobot {
 
     shooterMotor = new CANSparkMax(5, MotorType.kBrushless);
     shooterMotor.setInverted(true);
-    backUptakeMotor = new CANSparkMax(6, MotorType.kBrushless);
-    frontUptakeMotor = new CANSparkMax(7, MotorType.kBrushless);
-    frontUptakeMotor.setInverted(true);
+    uptakeMotor = new CANSparkMax(6, MotorType.kBrushless);
+    midtakeMotor = new CANSparkMax(7, MotorType.kBrushless);
+    midtakeMotor.setInverted(true);
     intakeMotor = new CANSparkMax(8, MotorType.kBrushed);
     intakeMotor.setInverted(true);
 
+    frontLeftMotorEncoder = frontLeftMotor.getEncoder();
+    backLeftMotorEncoder = backLeftMotor.getEncoder();
+    frontRightMotorEncoder = frontRightMotor.getEncoder();
+    backRightMotorEncoder = backRightMotor.getEncoder();
+
+    shooterMotorEncoder = shooterMotor.getEncoder();
+    uptakeMotorEncorder = uptakeMotor.getEncoder();
+    midtakeMotorEncoder = midtakeMotor.getEncoder();
+    
     xboxController = new XboxController(0);
   }
 
@@ -69,66 +80,58 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  public double booleanToInt(boolean booleanArgument){
-    if(booleanArgument) return 1;
-    else return 0;
-  }
-
-  public double unbump(double doubleArgument){
-    if(Math.abs(doubleArgument) < .1) return 0;
-    else return doubleArgument;
-  }
-
   @Override
   public void robotPeriodic() {}
 
-  /**
-   * 
-   */
+  /** This function is called periodically during autonomous. */
   @Override
   public void autonomousInit() {
-    frontLeftMotor.set(0.1);
-    backLeftMotor.set(0.1);
-    frontRightMotor.set(0.1);
-    backRightMotor.set(0.1);
+    setAllMotors(.1);
+    autonomousStartTime = System.currentTimeMillis();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    
+    if(System.currentTimeMillis() > autonomousStartTime + 1000){
+      setAllMotors(0);
+    }
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    setAllMotors(0);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    frontRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
-    backRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
     frontLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
     backLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+    frontRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+    backRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
 
-    frontUptakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
+    midtakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
     intakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
     if((xboxController.getYButton() || xboxController.getXButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
-      frontUptakeMotor.set(-1);
+      midtakeMotor.set(-1);
       intakeMotor.set(-1);
     }
 
-    backUptakeMotor.set(xboxController.getLeftTriggerAxis());
-    shooterMotor.set(xboxController.getLeftTriggerAxis());
+    uptakeMotor.set(xboxController.getLeftTriggerAxis());
+    shooterMotor.set(0.55*(xboxController.getLeftTriggerAxis()));
     if((xboxController.getXButton() || xboxController.getAButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
-      backUptakeMotor.set(-1);
+      uptakeMotor.set(-1);
       shooterMotor.set(-1);
     }
   }
 
   /** This function is called once when the robot is disabled. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    setAllMotors(0);
+  }
 
   /** This function is called periodically when disabled. */
   @Override
@@ -149,4 +152,27 @@ public class Robot extends TimedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  public double booleanToInt(boolean booleanArgument){
+    if(booleanArgument) return 1;
+    else return 0;
+  }
+
+  public double unbump(double doubleArgument){
+    if(Math.abs(doubleArgument) < .15) return 0;
+    else return doubleArgument;
+  }
+
+  public void setAllMotors(double percentValue){
+    frontRightMotor.set(percentValue);
+    backRightMotor.set(percentValue);
+    frontLeftMotor.set(percentValue);
+    backLeftMotor.set(percentValue);
+
+    midtakeMotor.set(percentValue);
+    intakeMotor.set(percentValue);
+
+    uptakeMotor.set(percentValue);
+    shooterMotor.set(percentValue);
+  }
 }
