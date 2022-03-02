@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -17,22 +18,48 @@ import edu.wpi.first.wpilibj.XboxController;
  * project.
  */
 public class Robot extends TimedRobot {
-  final CANSparkMax frontLeftMotor = new CANSparkMax(3, MotorType.kBrushless);
-  final CANSparkMax backLeftMotor = new CANSparkMax(4, MotorType.kBrushless);
-  final CANSparkMax frontRightMotor = new CANSparkMax(2, MotorType.kBrushless);
-  final CANSparkMax backRightMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax frontLeftMotor;
+  CANSparkMax backLeftMotor;
+  CANSparkMax frontRightMotor;
+  CANSparkMax backRightMotor;
 
-  final CANSparkMax shooterMotor = new CANSparkMax(5, MotorType.kBrushless);
-  //final CANSparkMax frontUptakeMotor = new CANSparkMax(6, MotorType.kBrushless); this motor is broken
-  final CANSparkMax frontUptakeMotor = new CANSparkMax(7, MotorType.kBrushless);
-  final XboxController xboxController = new XboxController(0);
+  CANSparkMax shooterMotor;
+  CANSparkMax backUptakeMotor;
+  CANSparkMax frontUptakeMotor;
+  CANSparkMax intakeMotor;
+
+  RelativeEncoder frontLeftMotorEncoder;
+  RelativeEncoder backLeftMotorEncoder;
+  RelativeEncoder frontRightMotorEncoder;
+  RelativeEncoder backRightMotorEncoder;
+
+  RelativeEncoder shooterMotorEncoder;
+  RelativeEncoder backUptakeMotorEncorder;
+  RelativeEncoder frontUptakeMotorEncoder;
+
+  XboxController xboxController;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    
+    frontLeftMotor = new CANSparkMax(2, MotorType.kBrushless);
+    backLeftMotor = new CANSparkMax(1, MotorType.kBrushless);
+    frontLeftMotor.setInverted(true);
+    backLeftMotor.setInverted(true);
+    frontRightMotor = new CANSparkMax(3, MotorType.kBrushless);
+    backRightMotor = new CANSparkMax(4, MotorType.kBrushless);
+
+    shooterMotor = new CANSparkMax(5, MotorType.kBrushless);
+    shooterMotor.setInverted(true);
+    backUptakeMotor = new CANSparkMax(6, MotorType.kBrushless);
+    frontUptakeMotor = new CANSparkMax(7, MotorType.kBrushless);
+    frontUptakeMotor.setInverted(true);
+    intakeMotor = new CANSparkMax(8, MotorType.kBrushed);
+    intakeMotor.setInverted(true);
+
+    xboxController = new XboxController(0);
   }
 
   /**
@@ -42,25 +69,28 @@ public class Robot extends TimedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  @Override
-  public void robotPeriodic() {
-    shooterMotor.set(xboxController.getLeftTriggerAxis());
-    frontUptakeMotor.set(xboxController.getRightTriggerAxis());
+  public double booleanToInt(boolean booleanArgument){
+    if(booleanArgument) return 1;
+    else return 0;
   }
 
+  public double unbump(double doubleArgument){
+    if(Math.abs(doubleArgument) < .1) return 0;
+    else return doubleArgument;
+  }
+
+  @Override
+  public void robotPeriodic() {}
+
   /**
-   * This autonomous (along with the chooser code above) shows how to select between different
-   * autonomous modes using the dashboard. The sendable chooser code works with the Java
-   * SmartDashboard. If you prefer the LabVIEW Dashboard, remove all of the chooser code and
-   * uncomment the getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to the switch structure
-   * below with additional strings. If using the SendableChooser make sure to add them to the
-   * chooser code above as well.
+   * 
    */
   @Override
   public void autonomousInit() {
-    
+    frontLeftMotor.set(0.1);
+    backLeftMotor.set(0.1);
+    frontRightMotor.set(0.1);
+    backRightMotor.set(0.1);
   }
 
   /** This function is called periodically during autonomous. */
@@ -75,7 +105,26 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    frontRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+    backRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+    frontLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+    backLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+
+    frontUptakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
+    intakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
+    if((xboxController.getYButton() || xboxController.getXButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
+      frontUptakeMotor.set(-1);
+      intakeMotor.set(-1);
+    }
+
+    backUptakeMotor.set(xboxController.getLeftTriggerAxis());
+    shooterMotor.set(xboxController.getLeftTriggerAxis());
+    if((xboxController.getXButton() || xboxController.getAButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
+      backUptakeMotor.set(-1);
+      shooterMotor.set(-1);
+    }
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
