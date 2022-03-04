@@ -39,7 +39,6 @@ public class Robot extends TimedRobot {
 
   XboxController xboxController;
 
-  Long autonomousStartTime;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -86,15 +85,15 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousInit() {
-    setAllMotors(.1);
-    autonomousStartTime = System.currentTimeMillis();
+    shooterMotorEncoder.setPosition(0);
+    shooterMotor.set(1);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(System.currentTimeMillis() > autonomousStartTime + 1000){
-      setAllMotors(0);
+    if(shooterMotorEncoder.getPosition() > 100){
+      shooterMotor.set(0);
     }
   }
 
@@ -120,7 +119,7 @@ public class Robot extends TimedRobot {
     }
 
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
-    shooterMotor.set(0.55*(xboxController.getLeftTriggerAxis()));
+    shooterMotor.set(0.60*(xboxController.getLeftTriggerAxis()));
     if((xboxController.getXButton() || xboxController.getAButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
       uptakeMotor.set(-1);
       shooterMotor.set(-1);
