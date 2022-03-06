@@ -62,12 +62,19 @@ public class Robot extends TimedRobot {
 
     frontLeftMotorEncoder = frontLeftMotor.getEncoder();
     backLeftMotorEncoder = backLeftMotor.getEncoder();
+    frontLeftMotorEncoder.setInverted(true);
+    backLeftMotorEncoder.setInverted(true);
     frontRightMotorEncoder = frontRightMotor.getEncoder();
     backRightMotorEncoder = backRightMotor.getEncoder();
 
     shooterMotorEncoder = shooterMotor.getEncoder();
     uptakeMotorEncorder = uptakeMotor.getEncoder();
     midtakeMotorEncoder = midtakeMotor.getEncoder();
+
+    frontLeftMotorEncoder.setPosition(0);
+    backLeftMotorEncoder.setPosition(0);
+    frontRightMotorEncoder.setPosition(0);
+    backRightMotorEncoder.setPosition(0);
     
     xboxController = new XboxController(0);
   }
@@ -85,15 +92,30 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousInit() {
-    shooterMotorEncoder.setPosition(0);
-    shooterMotor.set(1);
+    frontLeftMotorEncoder.setPosition(0);
+    backLeftMotorEncoder.setPosition(0);
+    frontRightMotorEncoder.setPosition(0);
+    backRightMotorEncoder.setPosition(0);
+    frontLeftMotor.set(.5);
+    backLeftMotor.set(.5);
+    frontRightMotor.set(-.5);
+    backRightMotor.set(-.5);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(shooterMotorEncoder.getPosition() > 100){
-      shooterMotor.set(0);
+    if(frontLeftMotorEncoder.getPosition() > 40){
+      frontLeftMotor.set(0);
+    }
+    if(backLeftMotorEncoder.getPosition() > 40){
+      backLeftMotor.set(0);
+    }
+    if(frontRightMotorEncoder.getPosition() > 40){
+      frontRightMotor.set(0);
+    }
+    if(backRightMotorEncoder.getPosition() > 40){
+      backRightMotor.set(0);
     }
   }
 
@@ -106,30 +128,42 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    frontLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
-    backLeftMotor.set(0.5*unbump(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
-    frontRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
-    backRightMotor.set(0.5*unbump(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+    if(xboxController.getBButton() && xboxController.getAButton()){
+      frontLeftMotor.set(0.75);//xboxController.getLeftY() or a double between -1 and 1
+      backLeftMotor.set(0.75);//xboxController.getLeftY() or a double between -1 and 1
+      frontRightMotor.set(0.75);//xboxController.getRightY() or a double between -1 and 1
+      backRightMotor.set(0.75);//xboxController.getRightY() or a double between -1 and 1
+    } else {
+      frontLeftMotor.set(0.5*deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+      backLeftMotor.set(0.5*deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+      frontRightMotor.set(0.5*deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+      backRightMotor.set(0.5*deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+    }
 
-    midtakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
-    intakeMotor.set(unbump(xboxController.getRightTriggerAxis()));
-    if((xboxController.getYButton() || xboxController.getXButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
+    midtakeMotor.set(deadzone(xboxController.getRightTriggerAxis()));
+    intakeMotor.set(deadzone(xboxController.getRightTriggerAxis()));
+    if((xboxController.getYButton() || xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)){
       midtakeMotor.set(-1);
       intakeMotor.set(-1);
     }
 
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
-    shooterMotor.set(0.60*(xboxController.getLeftTriggerAxis()));
-    if((xboxController.getXButton() || xboxController.getAButton()) && (unbump(xboxController.getRightTriggerAxis()) == 0)){
+    shooterMotor.set(0.73*(xboxController.getLeftTriggerAxis()));
+    if((xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)){
       uptakeMotor.set(-1);
       shooterMotor.set(-1);
     }
+
   }
 
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
     setAllMotors(0);
+    frontLeftMotorEncoder.setPosition(0);
+    backLeftMotorEncoder.setPosition(0);
+    frontRightMotorEncoder.setPosition(0);
+    backRightMotorEncoder.setPosition(0);
   }
 
   /** This function is called periodically when disabled. */
@@ -157,7 +191,7 @@ public class Robot extends TimedRobot {
     else return 0;
   }
 
-  public double unbump(double doubleArgument){
+  public double deadzone(double doubleArgument){
     if(Math.abs(doubleArgument) < .15) return 0;
     else return doubleArgument;
   }
