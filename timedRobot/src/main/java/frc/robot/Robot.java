@@ -97,33 +97,55 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     setAllEncoders(0);
-    shooterMotor.set(.75);
-    uptakeMotor.set(1);
-    midtakeMotor.set(1);
+   // shooterMotor.set(.75);
+   //commented out to give shootermotor time to spin up uptakeMotor.set(1);
+   // midtakeMotor.set(1);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    if(shooterMotorEncoder.getPosition() > 140){
-      shooterMotor.set(0);
-      uptakeMotor.set(0);
-      midtakeMotor.set(0);
-      if(frontLeftMotorEncoder.getPosition() < 60 && 
-         backLeftMotorEncoder.getPosition() < 60 &&
-         frontRightMotorEncoder.getPosition() < 60 &&
-         backRightMotorEncoder.getPosition() < 60){
-          frontLeftMotor.set(.25);
-          backLeftMotor.set(.25);
-          frontRightMotor.set(.25);
-          backRightMotor.set(.25);
-      } else {
-          frontLeftMotor.set(0);
-          backLeftMotor.set(0);
-          frontRightMotor.set(0);
-          backRightMotor.set(0);
-      }
-    }
+    //temporary test to make all motors move once
+       if(frontLeftMotorEncoder.getPosition() < 1 && 
+         backLeftMotorEncoder.getPosition() < 1 &&
+         frontRightMotorEncoder.getPosition() < 1 &&
+          backRightMotorEncoder.getPosition() < 1){
+            
+            frontLeftMotor.set(.25);
+            backLeftMotor.set(.25);
+            frontRightMotor.set(.25);
+            backRightMotor.set(.25);
+            } else {
+            frontLeftMotor.set(0);
+            backLeftMotor.set(0);
+            frontRightMotor.set(0);
+            backRightMotor.set(0);
+            }
+
+    //if (shooterMotorEncoder.getPosition() > 30){
+      //uptakeMotor.set(1);
+      //midtakeMotor.set(1);
+    //if(shooterMotorEncoder.getPosition() > 150){
+      //shooterMotor.set(0);
+      //uptakeMotor.set(0);
+      //midtakeMotor.set(0);
+      //if(frontLeftMotorEncoder.getPosition() < 60 && 
+         //backLeftMotorEncoder.getPosition() < 60 &&
+         //frontRightMotorEncoder.getPosition() < 60 &&
+      //    backRightMotorEncoder.getPosition() < 60){
+      //    frontLeftMotor.set(.25);
+      //    backLeftMotor.set(.25);
+      //    frontRightMotor.set(.25);
+      //    backRightMotor.set(.25);
+      // } else {
+      //     frontLeftMotor.set(0);
+      //     backLeftMotor.set(0);
+      //     frontRightMotor.set(0);
+      //     backRightMotor.set(0);
+      // }
+    //}
+
+  //}
   }
 
   /** This function is called once when teleop is enabled. */
