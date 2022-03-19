@@ -40,6 +40,8 @@ public class Robot extends TimedRobot {
   XboxController xboxController;
 
   int drivetrainModifier;
+  int Step = 1;
+  double referenceShooterPos;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -97,57 +99,136 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     setAllEncoders(0);
-   // shooterMotor.set(.75);
+   shooterMotor.set(.75);
    //commented out to give shootermotor time to spin up uptakeMotor.set(1);
-   // midtakeMotor.set(1);
+   midtakeMotor.set(1);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //temporary test to make all motors move once
-       if(frontLeftMotorEncoder.getPosition() < 1 && 
-         backLeftMotorEncoder.getPosition() < 1 &&
-         frontRightMotorEncoder.getPosition() < 1 &&
-          backRightMotorEncoder.getPosition() < 1){
-            
-            frontLeftMotor.set(.25);
-            backLeftMotor.set(.25);
-            frontRightMotor.set(.25);
-            backRightMotor.set(.25);
-            } else {
-            frontLeftMotor.set(0);
-            backLeftMotor.set(0);
-            frontRightMotor.set(0);
-            backRightMotor.set(0);
-            }
+    //create time for small pauses
+//this idea may not be needed if the turn is enough to bring down intake unless there is another //pause needed such as when the bot is moving back during auto - though i’ll want to test first
 
-    //if (shooterMotorEncoder.getPosition() > 30){
-      //uptakeMotor.set(1);
-      //midtakeMotor.set(1);
-    //if(shooterMotorEncoder.getPosition() > 150){
-      //shooterMotor.set(0);
-      //uptakeMotor.set(0);
-      //midtakeMotor.set(0);
-      //if(frontLeftMotorEncoder.getPosition() < 60 && 
-         //backLeftMotorEncoder.getPosition() < 60 &&
-         //frontRightMotorEncoder.getPosition() < 60 &&
-      //    backRightMotorEncoder.getPosition() < 60){
-      //    frontLeftMotor.set(.25);
-      //    backLeftMotor.set(.25);
-      //    frontRightMotor.set(.25);
-      //    backRightMotor.set(.25);
-      // } else {
-      //     frontLeftMotor.set(0);
-      //     backLeftMotor.set(0);
-      //     frontRightMotor.set(0);
-      //     backRightMotor.set(0);
-      // }
-    //}
-
-  //}
+switch(Step) {
+  case(1):
+      if (shooterMotorEncoder.getPosition() > 40) {
+          uptakeMotor.set(1);
+          midtakeMotor.set(1);
+      }
+      //move to step 2 after shooting
+      if (shooterMotorEncoder.getPosition() > 170) {
+  //turn off shooter
+      shooterMotor.set(0);
+  midtakeMotor.set(0);
+  uptakeMotor.set(0);
+      Step = 2;
+      }
+  break;
+  case 2:
+      //turn
+      frontRightMotor.set(.35);
+      backRightMotor.set(.35);
+  frontLeftMotor.set(.35);
+  backLeftMotor.set(.35);
+  //turn left motors to start turning after initial movement(?)
+  if (backRightMotorEncoder.getPosition() >= 2 && frontRightMotorEncoder.getPosition() >= 2) {
+    frontLeftMotor.set(-.35);
+    backLeftMotor.set(-.35);
   }
+  //stop and go to step 3
+      if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
+      frontRightMotor.set(0);
+  backRightMotor.set(0);
+  backLeftMotor.set(0);
+  frontLeftMotor.set(0);
+  //reset motor encoders
+  frontRightMotorEncoder.setPosition(0);
+  backRightMotorEncoder.setPosition(0);
+  frontLeftMotorEncoder.setPosition(0);
+  backLeftMotorEncoder.setPosition(0);
+      intakeMotor.set(1);
+      midtakeMotor.set(1);
+      Step = 3;
+      }
+    break;
+      //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
+case 3:
+      //moving to pick up ball after shooting
+      frontRightMotor.set(.25);
+  backRightMotor.set(.25);
+  frontLeftMotor.set(.25);
+  backLeftMotor.set(.25);
+      if (frontLeftMotorEncoder.getPosition() >= 45.5  && backRightMotorEncoder.getPosition() >= 45.5 && backLeftMotorEncoder.getPosition() > 45.5 && frontRightMotorEncoder.getPosition() > 45.5){
+        frontRightMotorEncoder.setPosition(0);
+       backRightMotorEncoder.setPosition(0);
+       frontLeftMotorEncoder.setPosition(0);
+       backLeftMotorEncoder.setPosition(0);
+        intakeMotor.set(1);
+      Step =4;
+      }
+  break;
+  case 4:
+      //go backwards
+  frontRightMotor.set(-.25);
+  backRightMotor.set(-.25);
+  frontLeftMotor.set(-.25);
+  backLeftMotor.set(-.25);
+      //because we are moving the same amount backwards, this should be about //twice the encoder distance i think? Or we could restart the encoder positions in the previous //step if needed
+  if (frontLeftMotorEncoder.getPosition() <= -44 && backRightMotorEncoder.getPosition() <= -44 && backLeftMotorEncoder.getPosition() < -44 && frontRightMotorEncoder.getPosition() < -44){
+    frontRightMotor.set(0);
+    backRightMotor.set(0);
+    frontLeftMotor.set(0);
+    backLeftMotor.set(0);
 
+      //shoot again
+      referenceShooterPos = shooterMotorEncoder.getPosition();
+      shooterMotor.set(0.75);
+      Step = 5;
+      }
+  break;
+  case 5:
+  //if greater than 20, basically repeating same as last time, assuming we dont want to //reset the position for shooter encoder
+  //giving shootermotor time to speed up again
+    if  (shooterMotorEncoder.getPosition() - referenceShooterPos >= 20) {
+        uptakeMotor.set(1);
+        midtakeMotor.set(1);
+    }
+  //again, if shooter thing has gotten to the point that it shoots, (we’re using differences //here now to measure the encoder units from our frain of reference, variables here can be //renamed to a much better convention later)
+//then we move out of robot and head to step 6 where it measures our distance to stop
+      if (shooterMotorEncoder.getPosition() - referenceShooterPos  >= 155) {
+     //UNCOMMENT THIS TO MOVE OUT OF TARMAC!!!!
+     //IMPORTANT
+     //VERY IMPORTANT
+     //IM JUST TYPING MORE COMMENTS TO GET FUTURE ALEXS ATTENTION
+     //alex anderson if you do NOT remember this you WILL have caused great dishonour
+     //just uncomment these 8 lines of code
+     //:)
+     frontRightMotor.set(.25);
+     backRightMotor.set(.25);
+     frontLeftMotor.set(.25);
+     backLeftMotor.set(.25);
+     frontRightMotorEncoder.setPosition(0);
+     backRightMotorEncoder.setPosition(0);
+     frontLeftMotorEncoder.setPosition(0);
+     backLeftMotorEncoder.setPosition(0);
+          shooterMotor.set(0);
+          uptakeMotor.set(0);
+          midtakeMotor.set(0);
+          Step = 6;
+  }
+  break;
+  case 6:
+      if (frontLeftMotorEncoder.getPosition() >= 13 && backRightMotorEncoder.getPosition() >= 13 && backLeftMotorEncoder.getPosition() > 13 && frontRightMotorEncoder.getPosition() > 13){
+    frontRightMotor.set(0);
+    backRightMotor.set(0);
+    frontLeftMotor.set(0);
+    backLeftMotor.set(0);
+    }
+  break;
+
+  }
+}
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
@@ -168,12 +249,12 @@ public class Robot extends TimedRobot {
       frontRightMotor.set(-0.65);//xboxController.getRightY() or a double between -1 and 1
       backRightMotor.set(-0.65);//xboxController.getRightY() or a double between -1 and 1
     } else {
-      frontLeftMotor.set(-0.5 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
-      backLeftMotor.set(-0.5 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
-      frontRightMotor.set(-0.5 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
-      backRightMotor.set(-0.5 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+      frontLeftMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+      backLeftMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
+      frontRightMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
+      backRightMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
     }
-    if(xboxController.getYButton() || xboxController.getXButton()){
+    if(xboxController.getYButton()){
       midtakeMotor.set(-1);
       intakeMotor.set(-1);
     } else {
