@@ -159,7 +159,7 @@ case 3:
   backRightMotor.set(.25);
   frontLeftMotor.set(.25);
   backLeftMotor.set(.25);
-      if (frontLeftMotorEncoder.getPosition() >= 45.5  && backRightMotorEncoder.getPosition() >= 45.5 && backLeftMotorEncoder.getPosition() > 45.5 && frontRightMotorEncoder.getPosition() > 45.5){
+      if (frontLeftMotorEncoder.getPosition() >= 40  && backRightMotorEncoder.getPosition() >= 40 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
         frontRightMotorEncoder.setPosition(0);
        backRightMotorEncoder.setPosition(0);
        frontLeftMotorEncoder.setPosition(0);
@@ -175,17 +175,19 @@ case 3:
   frontLeftMotor.set(-.25);
   backLeftMotor.set(-.25);
       //because we are moving the same amount backwards, this should be about //twice the encoder distance i think? Or we could restart the encoder positions in the previous //step if needed
-  if (frontLeftMotorEncoder.getPosition() <= -44 && backRightMotorEncoder.getPosition() <= -44 && backLeftMotorEncoder.getPosition() < -44 && frontRightMotorEncoder.getPosition() < -44){
+  if (frontLeftMotorEncoder.getPosition() <= -42 && backRightMotorEncoder.getPosition() <= -42 && backLeftMotorEncoder.getPosition() < -42 && frontRightMotorEncoder.getPosition() < -42){
     frontRightMotor.set(0);
     backRightMotor.set(0);
     frontLeftMotor.set(0);
     backLeftMotor.set(0);
+    intakeMotor.set(0);
 
-      //shoot again
+      //shoot againht6ttttttttttttttttttttttttttttttttttt
       referenceShooterPos = shooterMotorEncoder.getPosition();
-      shooterMotor.set(0.75);
+      shooterMotor.set(0.7);
       Step = 5;
       }
+
   break;
   case 5:
   //if greater than 20, basically repeating same as last time, assuming we dont want to //reset the position for shooter encoder
@@ -219,7 +221,7 @@ case 3:
   }
   break;
   case 6:
-      if (frontLeftMotorEncoder.getPosition() >= 13 && backRightMotorEncoder.getPosition() >= 13 && backLeftMotorEncoder.getPosition() > 13 && frontRightMotorEncoder.getPosition() > 13){
+      if (frontLeftMotorEncoder.getPosition() >= 19 && backRightMotorEncoder.getPosition() >= 19 && backLeftMotorEncoder.getPosition() > 19 && frontRightMotorEncoder.getPosition() > 19){
     frontRightMotor.set(0);
     backRightMotor.set(0);
     frontLeftMotor.set(0);
