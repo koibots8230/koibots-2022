@@ -260,7 +260,11 @@ case 3:
       midtakeMotor.set(-1);
       intakeMotor.set(-1);
     } else {
-      midtakeMotor.set(deadzone(xboxController.getRightTriggerAxis()));
+      if (xboxController.getRightTriggerAxis() > xboxController.getLeftTriggerAxis()){
+        midtakeMotor.set(xboxController.getRightTriggerAxis());
+      } else {
+      midtakeMotor.set(deadzone(xboxController.getLeftTriggerAxis()));
+      }
     intakeMotor.set(deadzone(xboxController.getRightTriggerAxis()));
     }
 
