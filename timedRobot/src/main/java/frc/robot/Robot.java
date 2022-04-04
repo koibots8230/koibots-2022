@@ -21,6 +21,14 @@ import edu.wpi.first.cameraserver.CameraServer;
 public class Robot extends TimedRobot {
   String SelectedAuto = "2taxi";
   //put "1taxi" here for 1 ball autotaxi, "2taxi" for 2 ball autotaxi
+  //enter a empty string "" for nothing
+  //"1notaxi for 1 ball no taxi, "0taxi" for just 0taxi
+  //options:
+  //###"1taxi"###
+  //###"2taxi"###
+  //###"1notaxi"###
+  //###"0taxi"###
+
 
   CANSparkMax frontLeftMotor;
   CANSparkMax backLeftMotor;
@@ -303,8 +311,64 @@ public class Robot extends TimedRobot {
     break;
     }
     break;
+  case("1notaxi"):
+    switch(Step) {
+      case(1):
+          if (shooterMotorEncoder.getPosition() > 40) {
+              uptakeMotor.set(1);
+              midtakeMotor.set(1);
+          }
+          //move to step 2 after shooting
+          if (shooterMotorEncoder.getPosition() > 170) {
+      //turn off shooter
+          shooterMotor.set(0);
+      midtakeMotor.set(0);
+      uptakeMotor.set(0);
+          Step = 2;
+          }
+      break;
+      case 2:
+          //turn
+          frontRightMotor.set(.35);
+          backRightMotor.set(.35);
+      frontLeftMotor.set(.35);
+      backLeftMotor.set(.35);
+      //turn left motors to start turning after initial movement(?)
+      if (backRightMotorEncoder.getPosition() >= 2 && frontRightMotorEncoder.getPosition() >= 2) {
+        frontLeftMotor.set(-.35);
+        backLeftMotor.set(-.35);
+      }
+      //stop and go to step 3
+          if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
+          frontRightMotor.set(0);
+      backRightMotor.set(0);
+      backLeftMotor.set(0);
+      frontLeftMotor.set(0);
+      //reset motor encoders
+      frontRightMotorEncoder.setPosition(0);
+      backRightMotorEncoder.setPosition(0);
+      frontLeftMotorEncoder.setPosition(0);
+      backLeftMotorEncoder.setPosition(0);
+          intakeMotor.set(1);
+          midtakeMotor.set(1);
+          Step = 3;
+          }
+      break;
+          //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
+    }
+  break;
+  case("0taxi"):
+  if !(frontLeftMotorEncoder.getPosition() >= 30  && backRightMotorEncoder.getPosition() >= 30 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
+    frontRightMotor.set(.25);
+    backRightMotor.set(.25);
+    frontLeftMotor.set(.25);
+    backLeftMotor.set(.25);
+  }
+  break;
   /* #endregion */
   }
+
+
 }
   /** This function is called once when teleop is enabled. */
   @Override
