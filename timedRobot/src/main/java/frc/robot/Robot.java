@@ -20,6 +20,7 @@ import edu.wpi.first.cameraserver.CameraServer;
  */
 public class Robot extends TimedRobot {
   String SelectedAuto = "2taxi";
+  //put "1taxi" here for 1 ball autotaxi, "2taxi" for 2 ball autotaxi
 
   CANSparkMax frontLeftMotor;
   CANSparkMax backLeftMotor;
@@ -85,7 +86,7 @@ public class Robot extends TimedRobot {
     backLeftMotorEncoder.setPosition(0);
     frontRightMotorEncoder.setPosition(0);
     backRightMotorEncoder.setPosition(0);
-    
+
     xboxController = new XboxController(0);
   }
 
@@ -290,11 +291,13 @@ public class Robot extends TimedRobot {
       backRightMotor.set(.25);
       frontLeftMotor.set(.25);
       backLeftMotor.set(.25);
-          if (frontLeftMotorEncoder.getPosition() >= 40  && backRightMotorEncoder.getPosition() >= 40 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
+          if (frontLeftMotorEncoder.getPosition() >= 30  && backRightMotorEncoder.getPosition() >= 30 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
             frontRightMotorEncoder.setPosition(0);
           backRightMotorEncoder.setPosition(0);
           frontLeftMotorEncoder.setPosition(0);
           backLeftMotorEncoder.setPosition(0);
+          setAllMotors(0);
+          Step = 0;
           break;
     }
     break;
