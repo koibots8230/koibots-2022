@@ -409,6 +409,13 @@ public class Robot extends TimedRobot {
 
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
     shooterMotor.set(0.75*(xboxController.getLeftTriggerAxis()));
+
+    if xboxController.getRightBumper() || xboxController.getLeftBumper() {
+      uptakeMotor.set(1)
+      shooterMotor.set(0.35)
+    }
+
+    if xboxController.get
     if((xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)){
       uptakeMotor.set(-1);
       shooterMotor.set(-1);
