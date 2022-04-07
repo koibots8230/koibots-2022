@@ -19,17 +19,6 @@ import edu.wpi.first.cameraserver.CameraServer;
  * project.
  */
 public class Robot extends TimedRobot {
-  String SelectedAuto = "1taxi";
-  //put "1taxi" here for 1 ball autotaxi, "2taxi" for 2 ball autotaxi
-  //enter a empty string "" for nothing
-  //"1notaxi for 1 ball no taxi, "0taxi" for just 0taxi
-  //options:
-  //###"1taxi"###
-  //###"2taxi"###
-  //###"1notaxi"###
-  //###"0taxi"###
-
-
   CANSparkMax frontLeftMotor;
   CANSparkMax backLeftMotor;
   CANSparkMax frontRightMotor;
@@ -50,6 +39,8 @@ public class Robot extends TimedRobot {
   RelativeEncoder midtakeMotorEncoder;
 
   XboxController xboxController;
+
+  double shooterMotorPowerModifier;
 
   int drivetrainModifier;
   int Step = 1;
@@ -239,11 +230,17 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     drivetrainModifier = 1;
     setAllMotors(0);
+    shooterMotorPowerModifier = 0.0;
   }
 
   /** This function is called periodically during teleop. */
   @Override
   public void teleopPeriodic() {
+    if(xboxController.getPOV() == 0){
+      shooterMotorPowerModifier += .1;
+    } else if(xboxController.getPOV() == 180){
+      shooterMotorPowerModifier -= .1;
+    }
     if(xboxController.getRawButtonPressed(8)) {
       drivetrainModifier = drivetrainModifier * -1;
     }
@@ -272,11 +269,11 @@ public class Robot extends TimedRobot {
     }
 
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
-    shooterMotor.set(0.75*(xboxController.getLeftTriggerAxis()));
+    shooterMotor.set((0.75 + shooterMotorPowerModifier)*(xboxController.getLeftTriggerAxis()));
 
     if(xboxController.getRightBumper() || xboxController.getLeftBumper()) {
       uptakeMotor.set(1);
-      shooterMotor.set(0.35);
+      shooterMotor.set(0.35 + shooterMotorPowerModifier);
     }
 
     if((xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)) {
