@@ -19,7 +19,7 @@ import edu.wpi.first.cameraserver.CameraServer;
  * project.
  */
 public class Robot extends TimedRobot {
-  String SelectedAuto = "2taxi";
+  String SelectedAuto = "1taxi";
   //put "1taxi" here for 1 ball autotaxi, "2taxi" for 2 ball autotaxi
   //enter a empty string "" for nothing
   //"1notaxi for 1 ball no taxi, "0taxi" for just 0taxi
@@ -114,39 +114,34 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     setAllEncoders(0);
-   shooterMotor.set(.75);
-   //commented out to give shootermotor time to spin up uptakeMotor.set(1);
-   midtakeMotor.set(1);
+    shooterMotor.set(.75);
+    //commented out to give shootermotor time to spin up uptakeMotor.set(1);
+    midtakeMotor.set(1);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
-//switch statement for the different kinds of autos
-
-  switch(SelectedAuto){
-    /*#region 2taxi */
-    case("2taxi"):
-      switch(Step) {
-        case(1):
-            if (shooterMotorEncoder.getPosition() > 40) {
-                uptakeMotor.set(1);
-                midtakeMotor.set(1);
-            }
-            //move to step 2 after shooting
-            if (shooterMotorEncoder.getPosition() > 170) {
-        //turn off shooter
-            shooterMotor.set(0);
-        midtakeMotor.set(0);
-        uptakeMotor.set(0);
-            Step = 2;
-            }
+    //switch statement for the different kinds of autos
+    switch(Step) {
+      case(1):
+        if (shooterMotorEncoder.getPosition() > 40) {
+            uptakeMotor.set(1);
+            midtakeMotor.set(1);
+        }
+        //move to step 2 after shooting
+        if (shooterMotorEncoder.getPosition() > 170) {
+          //turn off shooter
+          shooterMotor.set(0);
+          midtakeMotor.set(0);
+          uptakeMotor.set(0);
+          Step = 2;
+        }
         break;
-        case 2:
-            //turn
-            frontRightMotor.set(.35);
-            backRightMotor.set(.35);
+      case 2:
+        //turn
+        frontRightMotor.set(.35);
+        backRightMotor.set(.35);
         frontLeftMotor.set(.35);
         backLeftMotor.set(.35);
         //turn left motors to start turning after initial movement(?)
@@ -155,75 +150,66 @@ public class Robot extends TimedRobot {
           backLeftMotor.set(-.35);
         }
         //stop and go to step 3
-            if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
-            frontRightMotor.set(0);
-        backRightMotor.set(0);
-        backLeftMotor.set(0);
-        frontLeftMotor.set(0);
-        //reset motor encoders
-        frontRightMotorEncoder.setPosition(0);
-        backRightMotorEncoder.setPosition(0);
-        frontLeftMotorEncoder.setPosition(0);
-        backLeftMotorEncoder.setPosition(0);
-            intakeMotor.set(1);
-            midtakeMotor.set(1);
-            Step = 3;
-            }
-          break;
-            //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
+        if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
+          frontRightMotor.set(0);
+          backRightMotor.set(0);
+          backLeftMotor.set(0);
+          frontLeftMotor.set(0);
+          //reset motor encoders
+          frontRightMotorEncoder.setPosition(0);
+          backRightMotorEncoder.setPosition(0);
+          frontLeftMotorEncoder.setPosition(0);
+          backLeftMotorEncoder.setPosition(0);
+          intakeMotor.set(1);
+          midtakeMotor.set(1);
+          Step = 3;
+        }
+        break;
+        //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
       case 3:
-            //moving to pick up ball after shooting
-            frontRightMotor.set(.25);
+        //moving to pick up ball after shooting
+        frontRightMotor.set(.25);
         backRightMotor.set(.25);
         frontLeftMotor.set(.25);
         backLeftMotor.set(.25);
-            if (frontLeftMotorEncoder.getPosition() >= 40  && backRightMotorEncoder.getPosition() >= 40 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
-              frontRightMotorEncoder.setPosition(0);
-            backRightMotorEncoder.setPosition(0);
-            frontLeftMotorEncoder.setPosition(0);
-            backLeftMotorEncoder.setPosition(0);
-              intakeMotor.set(1);
-            Step =4;
-            }
+        if(frontLeftMotorEncoder.getPosition() >= 40  && backRightMotorEncoder.getPosition() >= 40 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40) {
+          frontRightMotorEncoder.setPosition(0);
+          backRightMotorEncoder.setPosition(0);
+          frontLeftMotorEncoder.setPosition(0);
+          backLeftMotorEncoder.setPosition(0);
+          intakeMotor.set(1);
+          Step = 4;
+        }
         break;
-        case 4:
-            //go backwards
+      case 4:
+        //go backwards
         frontRightMotor.set(-.25);
         backRightMotor.set(-.25);
         frontLeftMotor.set(-.25);
         backLeftMotor.set(-.25);
-            //because we are moving the same amount backwards, this should be about //twice the encoder distance i think? Or we could restart the encoder positions in the previous //step if needed
-        if (frontLeftMotorEncoder.getPosition() <= -42 && backRightMotorEncoder.getPosition() <= -42 && backLeftMotorEncoder.getPosition() < -42 && frontRightMotorEncoder.getPosition() < -42){
+        //because we are moving the same amount backwards, this should be about //twice the encoder distance i think? Or we could restart the encoder positions in the previous //step if needed
+        if(frontLeftMotorEncoder.getPosition() <= -42 && backRightMotorEncoder.getPosition() <= -42 && backLeftMotorEncoder.getPosition() < -42 && frontRightMotorEncoder.getPosition() < -42) {
           frontRightMotor.set(0);
           backRightMotor.set(0);
           frontLeftMotor.set(0);
           backLeftMotor.set(0);
           intakeMotor.set(0);
 
-            //shoot againht6ttttttttttttttttttttttttttttttttttt
-            referenceShooterPos = shooterMotorEncoder.getPosition();
-            shooterMotor.set(0.7);
-            Step = 5;
-            }
-
+          //shoot again
+          referenceShooterPos = shooterMotorEncoder.getPosition();
+          shooterMotor.set(0.7);
+          Step = 5;
+        }
         break;
-        case 5:
+      case 5:
         //if greater than 20, basically repeating same as last time, assuming we dont want to //reset the position for shooter encoder
         //giving shootermotor time to speed up again
-          if  (shooterMotorEncoder.getPosition() - referenceShooterPos >= 20) {
-              uptakeMotor.set(1);
-              midtakeMotor.set(1);
-          }
-        //again, if shooter thing has gotten to the point that it shoots, (we’re using differences //here now to measure the encoder units from our frain of reference, variables here can be //renamed to a much better convention later)
-      //then we move out of robot and head to step 6 where it measures our distance to stop
-            if (shooterMotorEncoder.getPosition() - referenceShooterPos  >= 155) {
-          //UNCOMMENT THIS TO MOVE OUT OF TARMAC!!!!
-          //IMPORTANT
-          //VERY IMPORTANT
-          //IM JUST TYPING MORE COMMENTS TO GET FUTURE ALEXS ATTENTION
-          //alex anderson if you do NOT remember this you WILL have caused great dishonour
-          //just uncomment these 8 lines of code
-          //:)
+        if(shooterMotorEncoder.getPosition() - referenceShooterPos >= 20) {
+          uptakeMotor.set(1);
+          midtakeMotor.set(1);
+        }
+        //again, if shooter thing has gotten to the point that it shoots, (we’re using differences //here now to measure the encoder units from our frain of reference, variables here can be //renamed to a much better convention later) //then we move out of robot and head to step 6 where it measures our distance to stop
+        if (shooterMotorEncoder.getPosition() - referenceShooterPos  >= 155) {
           frontRightMotor.set(.25);
           backRightMotor.set(.25);
           frontLeftMotor.set(.25);
@@ -232,144 +218,22 @@ public class Robot extends TimedRobot {
           backRightMotorEncoder.setPosition(0);
           frontLeftMotorEncoder.setPosition(0);
           backLeftMotorEncoder.setPosition(0);
-                shooterMotor.set(0);
-                uptakeMotor.set(0);
-                midtakeMotor.set(0);
-                Step = 6;
+          shooterMotor.set(0);
+          uptakeMotor.set(0);
+          midtakeMotor.set(0);
+          Step = 6;
         }
         break;
-        case 6:
-            if (frontLeftMotorEncoder.getPosition() >= 19 && backRightMotorEncoder.getPosition() >= 19 && backLeftMotorEncoder.getPosition() > 19 && frontRightMotorEncoder.getPosition() > 19){
+      case 6:
+        if (frontLeftMotorEncoder.getPosition() >= 19 && backRightMotorEncoder.getPosition() >= 19 && backLeftMotorEncoder.getPosition() > 19 && frontRightMotorEncoder.getPosition() > 19) {
           frontRightMotor.set(0);
           backRightMotor.set(0);
           frontLeftMotor.set(0);
           backLeftMotor.set(0);
-          }
+        }
         break;
-
-      }
-      break;
-    case("1taxi"):
-    switch(Step) {
-      case(1):
-          if (shooterMotorEncoder.getPosition() > 40) {
-              uptakeMotor.set(1);
-              midtakeMotor.set(1);
-          }
-          //move to step 2 after shooting
-          if (shooterMotorEncoder.getPosition() > 170) {
-      //turn off shooter
-          shooterMotor.set(0);
-      midtakeMotor.set(0);
-      uptakeMotor.set(0);
-          Step = 2;
-          }
-      break;
-      case 2:
-          //turn
-          frontRightMotor.set(.35);
-          backRightMotor.set(.35);
-      frontLeftMotor.set(.35);
-      backLeftMotor.set(.35);
-      //turn left motors to start turning after initial movement(?)
-      if (backRightMotorEncoder.getPosition() >= 2 && frontRightMotorEncoder.getPosition() >= 2) {
-        frontLeftMotor.set(-.35);
-        backLeftMotor.set(-.35);
-      }
-      //stop and go to step 3
-          if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
-          frontRightMotor.set(0);
-      backRightMotor.set(0);
-      backLeftMotor.set(0);
-      frontLeftMotor.set(0);
-      //reset motor encoders
-      frontRightMotorEncoder.setPosition(0);
-      backRightMotorEncoder.setPosition(0);
-      frontLeftMotorEncoder.setPosition(0);
-      backLeftMotorEncoder.setPosition(0);
-          intakeMotor.set(1);
-          midtakeMotor.set(1);
-          Step = 3;
-          }
-        break;
-          //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
-    case 3:
-          //moving to pick up ball after shooting
-          frontRightMotor.set(.25);
-      backRightMotor.set(.25);
-      frontLeftMotor.set(.25);
-      backLeftMotor.set(.25);
-          if (frontLeftMotorEncoder.getPosition() >= 30  && backRightMotorEncoder.getPosition() >= 30 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
-            frontRightMotorEncoder.setPosition(0);
-          backRightMotorEncoder.setPosition(0);
-          frontLeftMotorEncoder.setPosition(0);
-          backLeftMotorEncoder.setPosition(0);
-          setAllMotors(0);
-          Step = 0;
-          break;
     }
-    break;
-    }
-    break;
-  case("1notaxi"):
-    switch(Step) {
-      case(1):
-          if (shooterMotorEncoder.getPosition() > 40) {
-              uptakeMotor.set(1);
-              midtakeMotor.set(1);
-          }
-          //move to step 2 after shooting
-          if (shooterMotorEncoder.getPosition() > 170) {
-      //turn off shooter
-          shooterMotor.set(0);
-      midtakeMotor.set(0);
-      uptakeMotor.set(0);
-          Step = 2;
-          }
-      break;
-      case 2:
-          //turn
-          frontRightMotor.set(.35);
-          backRightMotor.set(.35);
-      frontLeftMotor.set(.35);
-      backLeftMotor.set(.35);
-      //turn left motors to start turning after initial movement(?)
-      if (backRightMotorEncoder.getPosition() >= 2 && frontRightMotorEncoder.getPosition() >= 2) {
-        frontLeftMotor.set(-.35);
-        backLeftMotor.set(-.35);
-      }
-      //stop and go to step 3
-          if (backRightMotorEncoder.getPosition() >= 4.8 && frontRightMotorEncoder.getPosition() >= 4.8) {
-          frontRightMotor.set(0);
-      backRightMotor.set(0);
-      backLeftMotor.set(0);
-      frontLeftMotor.set(0);
-      //reset motor encoders
-      frontRightMotorEncoder.setPosition(0);
-      backRightMotorEncoder.setPosition(0);
-      frontLeftMotorEncoder.setPosition(0);
-      backLeftMotorEncoder.setPosition(0);
-          intakeMotor.set(1);
-          midtakeMotor.set(1);
-          Step = 3;
-          }
-      break;
-          //Im assuming that the intake will go down from turning, so there’s no need to //move and stop after this to move forwads
-    }
-  break;
-  case("0taxi"):
-  if !(frontLeftMotorEncoder.getPosition() >= 30  && backRightMotorEncoder.getPosition() >= 30 && backLeftMotorEncoder.getPosition() > 40 && frontRightMotorEncoder.getPosition() > 40){
-    frontRightMotor.set(.25);
-    backRightMotor.set(.25);
-    frontLeftMotor.set(.25);
-    backLeftMotor.set(.25);
   }
-  break;
-  /* #endregion */
-  }
-
-
-}
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
@@ -380,26 +244,26 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during teleop. */
   @Override
   public void teleopPeriodic() {
-    if(xboxController.getRawButtonPressed(8)){
+    if(xboxController.getRawButtonPressed(8)) {
       drivetrainModifier = drivetrainModifier * -1;
     }
     xboxController.getRawButton(8);
-    if(xboxController.getBButton() && xboxController.getAButton()){
-      frontLeftMotor.set(-0.65);//xboxController.getLeftY() or a double between -1 and 1
-      backLeftMotor.set(-0.65);//xboxController.getLeftY() or a double between -1 and 1
-      frontRightMotor.set(-0.65);//xboxController.getRightY() or a double between -1 and 1
-      backRightMotor.set(-0.65);//xboxController.getRightY() or a double between -1 and 1
+    if(xboxController.getBButton() && xboxController.getAButton()) {
+      frontLeftMotor.set(-0.85);//xboxController.getLeftY() or a double between -1 and 1
+      backLeftMotor.set(-0.85);//xboxController.getLeftY() or a double between -1 and 1
+      frontRightMotor.set(-0.85);//xboxController.getRightY() or a double between -1 and 1
+      backRightMotor.set(-0.85);//xboxController.getRightY() or a double between -1 and 1
     } else {
       frontLeftMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
       backLeftMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getLeftY()));//xboxController.getLeftY() or a double between -1 and 1
       frontRightMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
       backRightMotor.set(-0.65 * drivetrainModifier * deadzone(xboxController.getRightY()));//xboxController.getRightY() or a double between -1 and 1
     }
-    if(xboxController.getYButton()){
+    if(xboxController.getYButton()) {
       midtakeMotor.set(-1);
       intakeMotor.set(-1);
     } else {
-      if (xboxController.getRightTriggerAxis() > xboxController.getLeftTriggerAxis()){
+      if (xboxController.getRightTriggerAxis() > xboxController.getLeftTriggerAxis()) {
         midtakeMotor.set(xboxController.getRightTriggerAxis());
       } else {
       midtakeMotor.set(deadzone(xboxController.getLeftTriggerAxis()));
@@ -410,13 +274,12 @@ public class Robot extends TimedRobot {
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
     shooterMotor.set(0.75*(xboxController.getLeftTriggerAxis()));
 
-    if xboxController.getRightBumper() || xboxController.getLeftBumper() {
-      uptakeMotor.set(1)
-      shooterMotor.set(0.35)
+    if(xboxController.getRightBumper() || xboxController.getLeftBumper()) {
+      uptakeMotor.set(1);
+      shooterMotor.set(0.35);
     }
 
-    if xboxController.get
-    if((xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)){
+    if((xboxController.getXButton()) && (deadzone(xboxController.getRightTriggerAxis()) == 0)) {
       uptakeMotor.set(-1);
       shooterMotor.set(-1);
     }
@@ -450,17 +313,17 @@ public class Robot extends TimedRobot {
   @Override
   public void simulationPeriodic() {}
 
-  public double booleanToInt(boolean booleanArgument){
+  public double booleanToInt(boolean booleanArgument) {
     if(booleanArgument) return 1;
     else return 0;
   }
 
-  public double deadzone(double doubleArgument){
+  public double deadzone(double doubleArgument) {
     if(Math.abs(doubleArgument) < .15) return 0;
     else return doubleArgument;
   }
 
-  public void setAllMotors(double percentValue){
+  public void setAllMotors(double percentValue) {
     frontRightMotor.set(percentValue);
     backRightMotor.set(percentValue);
     frontLeftMotor.set(percentValue);
@@ -473,7 +336,7 @@ public class Robot extends TimedRobot {
     shooterMotor.set(percentValue);
   }
 
-  public void setAllEncoders(double value){
+  public void setAllEncoders(double value) {
     frontRightMotorEncoder.setPosition(value);
     backRightMotorEncoder.setPosition(value);
     frontLeftMotorEncoder.setPosition(value);
