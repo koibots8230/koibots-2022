@@ -33,9 +33,11 @@ public class RobotContainer {
   private final ShooterOnReleaseCommand shooterOnReleaseCommand = new ShooterOnReleaseCommand(shooterSubsystem);
   //Default Commands
   private final DriveTrainDefaultCommand driveTrainDefaultCommand = new DriveTrainDefaultCommand(driveTrainSubsystem);
-
+  
+  private final GenericHID m_operatorHID = new GenericHID(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
     //Default Command Binding
     driveTrainSubsystem.setDefaultCommand(new DriveTrainDefaultCommand(driveTrainSubsystem));
     // Configure the button bindings
@@ -50,7 +52,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     //Trigger Command Binding
-    new JoystickButton(xboxController, XboxController.Button.kA.value)
+    new JoystickButton(m_operatorHID, 2)
       .whenPressed(new ShooterOnPressCommand(shooterSubsystem))
       .whenReleased(new ShooterOnReleaseCommand(shooterSubsystem));
   }
