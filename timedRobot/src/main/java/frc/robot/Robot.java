@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
   RelativeEncoder midtakeMotorEncoder;
 
   XboxController xboxController;
+  PS4Controller psController;
 
   double shooterMotorPowerModifier;
 
@@ -87,6 +89,7 @@ public class Robot extends TimedRobot {
     backRightMotorEncoder.setPosition(0);
 
     xboxController = new XboxController(0);
+    psController = new PS4Controller(1);
   }
 
 
@@ -271,7 +274,7 @@ public class Robot extends TimedRobot {
     uptakeMotor.set(xboxController.getLeftTriggerAxis());
     shooterMotor.set((0.75 + shooterMotorPowerModifier)*(xboxController.getLeftTriggerAxis()));
 
-    if(xboxController.getRightBumper() || xboxController.getLeftBumper()) {
+    if(psController.getR3Button() || psController.getL3Button()) {
       uptakeMotor.set(1);
       shooterMotor.set(0.35 + shooterMotorPowerModifier);
     }
