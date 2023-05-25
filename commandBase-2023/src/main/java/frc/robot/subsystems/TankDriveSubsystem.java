@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
+import java.util.function.DoubleSupplier;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -34,10 +38,25 @@ public class TankDriveSubsystem extends SubsystemBase {
     }
 
     public class ManualDrive extends CommandBase {
-        double 
+        DoubleSupplier leftSpeed;
+        DoubleSupplier rightSpeed;
 
-        public ManualDrive(double leftJoystick, double rightJoystick) {
+        public ManualDrive(DoubleSupplier leftJoystick, DoubleSupplier rightJoystick) {
+            leftSpeed = leftJoystick;
+            rightSpeed = rightJoystick;
+            addRequirements(TankDriveSubsystem.get());
+        }
 
+        @Override
+        public void execute() {
+            TankDriveSubsystem.this.setMotors(
+                deadzone(leftSpeed.getAsDouble()),
+                deadzone(rightSpeed.getAsDouble()));
+        }
+
+        private double deadzone(double value) {
+            return Math.abs(value) > Constants.JOYSTICK_DEADZONE ? 
+            value * Constants.MAX_DRIVING_SPEED * Constants.DRIVETRAIN_MODIFIER : 0;
         }
     }
 }

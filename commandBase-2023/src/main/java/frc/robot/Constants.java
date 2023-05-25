@@ -5,6 +5,14 @@
 package frc.robot;
 
 public final class Constants {
+  // Driving Constants
+  public static final double JOYSTICK_DEADZONE = 0.15;
+  public static final double TRIGGER_DEADZONE = 0.15;
+  public static final double MAX_DRIVING_SPEED = 0.15;
+  public static double DRIVETRAIN_MODIFIER = 1;
+  // Shooting Constants
+  public static double SHOOTER_POWER_MODIFIER = 0;
+
   // Motor Ports
   public static final int FRONT_LEFT_DRIVE_MOTOR_PORT = 2;
   public static final int BACK_LEFT_DRIVE_MOTOR_PORT = 1;
